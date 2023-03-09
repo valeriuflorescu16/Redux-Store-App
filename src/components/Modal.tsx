@@ -1,28 +1,14 @@
 import React, { FC } from "react";
 import { useAppSelector } from "../hooks/redux-hooks";
-import { CartItem, Item } from "../interfaces/ItemInterface";
+import { Item } from "../interfaces/ItemInterface";
+import CartItems from "./CartItems";
 import "./Modal.css";
-
-const cartItemsCounter = (items: Item[]) => {
-  const cartItemsMap = new Map<Item, number>();
-
-  items.forEach((item) => {
-    const itemCount = cartItemsMap.get(item) || 0;
-    cartItemsMap.set(item, itemCount + 1);
-  });
-
-  const cartItems: CartItem[] = [];
-  cartItemsMap.forEach((count, item) => cartItems.push({ item, count }));
-
-  return cartItems;
-};
 
 const Modal: FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = (props) => {
   const items: Item[] = useAppSelector((state) => state.itemsReducer.items);
-  const cartItems: CartItem[] = cartItemsCounter(items);
 
   const total = items.reduce((sum, item) => sum + item.price, 0);
   return (
@@ -36,15 +22,7 @@ const Modal: FC<{
                 &times;
               </button>
             </div>
-            <div className="modal-body">
-              {cartItems.map((cartItem) => (
-                <div className="modal-item" key={cartItem.item.id}>
-                  <span>{cartItem.item.name}</span>
-                  <span>{cartItem.count}</span>
-                  <span>${cartItem.item.price.toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
+            <CartItems />
             <div className="modal-footer">
               <span>Total:</span>
               <span>£{total.toFixed(2)}</span>

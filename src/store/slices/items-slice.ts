@@ -16,6 +16,18 @@ const itemsSlice = createSlice({
     addItemToCart: (state, action: PayloadAction<Item>) => {
       state.items = [...state.items, action.payload];
     },
+    removeItemFromCart: (state, action: PayloadAction<Item>) => {
+      const index = state.items.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      const items = [...state.items];
+      items.splice(index, 1);
+
+      state.items = items;
+    },
+    deleteItem: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter(item => item.id !== action.payload);
+    }
   },
 });
 

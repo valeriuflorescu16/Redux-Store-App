@@ -1,6 +1,7 @@
 import React, { FC } from "react";
-import { useAppSelector } from "../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { Item } from "../interfaces/ItemInterface";
+import { itemsActions } from "../store/slices/items-slice";
 import CartItems from "./CartItems";
 import "./Modal.css";
 
@@ -8,6 +9,7 @@ const Modal: FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = (props) => {
+  const dispatch = useAppDispatch();
   const items: Item[] = useAppSelector((state) => state.itemsReducer.items);
 
   const total = items.reduce((sum, item) => sum + item.price, 0);
@@ -22,10 +24,24 @@ const Modal: FC<{
                 &times;
               </button>
             </div>
-            <CartItems />
+            {items.length > 0 ? (
+              <CartItems />
+            ) : (
+              <p>Your shopping cart is empty!</p>
+            )}
             <div className="modal-footer">
-              <span>Total:</span>
-              <span>£{total.toFixed(2)}</span>
+              {items.length > 0 && (
+                <button
+                  className="clear-cart-btn"
+                  onClick={() => dispatch(itemsActions.clearCart())}
+                >
+                  Clear Cart
+                </button>
+              )}
+              <div className="total-wrapper">
+                <span>Total:</span>
+                <span>£{total.toFixed(2)}</span>
+              </div>
             </div>
           </div>
         </div>

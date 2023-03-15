@@ -26,8 +26,11 @@ const itemsSlice = createSlice({
       state.items = items;
     },
     deleteItem: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
-    }
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
+    clearCart: () => {
+      return initialState;
+    },
   },
 });
 
